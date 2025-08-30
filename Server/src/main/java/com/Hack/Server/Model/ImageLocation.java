@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import com.Hack.Server.Model.User;
 
 
 @Getter
@@ -29,6 +30,12 @@ public class ImageLocation {
     private byte[] image; // Store base64 or convert to byte[] if needed
 
     // Getters and Setters
+    public User getUser() {
+        return user;
+    }
 
+    public void setUser(User user) {
+        this.user = user;
+    }
 
 }

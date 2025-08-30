@@ -23,6 +23,10 @@ public class User {
     private String password;
     private int Marit;
     private int FoulConunt;
+    private String Role;
+
+
+
 }
 
 

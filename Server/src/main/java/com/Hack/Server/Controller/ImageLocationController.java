@@ -1,67 +1,62 @@
 package com.Hack.Server.Controller;
 
 import com.Hack.Server.Model.ImageLocation;
+import com.Hack.Server.Model.User;
+import com.Hack.Server.Security.JwtUtil;
 import com.Hack.Server.Services.ImageLocationServices;
+import com.Hack.Server.Services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/login/Upload")
+@RequestMapping("/image")
 public class ImageLocationController {
 
     @Autowired
-    private ImageLocationServices imageLocationServices;
+    private ImageLocationServices imageLocationService;
 
-    @PostMapping("/upload")
-    public String uploadImageLocation(@RequestBody ImageLocation data) {
-        // Example logic:
-        System.out.println("User ID: " + imageLocationServices.SaveImageLocation(data));
-//        System.out.println("Latitude: " + data.getLatitude());
-//        System.out.println("Longitude: " + data.getLongitude());
-//        System.out.println("Image Base64 (first 30 chars): " + data.getImage().substring(0, 30) + "...");
+    @Autowired
+    private UserServices userService;
 
-        return "Data received successfully.";
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    @PostMapping("/save")
+    public ResponseEntity<?> saveImageLocation(
+            @RequestHeader("Authorization") String authHeader,
+            @RequestBody ImageLocation imageLocation) {
+
+        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(401).body("Unauthorized: Missing or invalid token");
+        }
+
+        try {
+            //  Extract JWT
+            String token = authHeader.substring(7);
+
+            // Extract email from JWT
+            String email = jwtUtil.extractUsername(token);
+
+            //  Validate token
+            if (!jwtUtil.validateToken(token, email)) {
+                return ResponseEntity.status(401).body("Unauthorized: Invalid token");
+            }
+
+            // Fetch user from DB
+            User user = userService.getUserByEmail(email);
+            if (user == null) {
+                return ResponseEntity.status(401).body("Unauthorized: Invalid user");
+            }
+
+            //Save image location for this user
+            imageLocation.setUser(user);
+            return ResponseEntity.ok(imageLocationService.SaveImageLocation(imageLocation));
+
+        } catch (Exception e) {
+            return ResponseEntity.status(401).body("Unauthorized: " + e.getMessage());
+        }
     }
-
 }
 
 
-//
-//
-//
-//package com.Hack.Server.Controller;
-//
-//import com.Hack.Server.Model.ImageLocation;
-//import com.Hack.Server.Model.User;
-//
-//
-//import com.Hack.Server.Principals.ImageLocationPrincipals;
-//import com.Hack.Server.Services.ImageLocationService;
-//import com.Hack.Server.Services.UserServices;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.http.ResponseEntity;
-//import org.springframework.web.bind.annotation.*;
-//
-//@RestController
-//@RequestMapping("/image")
-//public class ImageLocationController {
-//
-//    @Autowired
-//    private ImageLocationPrincipals IP;
-//    private UserServices userService;
-//
-//    @PostMapping("/save")
-//    public ResponseEntity<?> saveImageLocation(@RequestParam int userId,
-//                                               @RequestBody ImageLocation imageLocation) {
-//        User user = userService.findUserById(userId);
-//        if (user == null) {
-//            return ResponseEntity.status(401).body("Unauthorized: Please login first");
-//        }
-//        imageLocation.setUser(user);
-//        return ResponseEntity.ok(IP.SaveImageLocation(imageLocation));
-//    }
-//
-//}
