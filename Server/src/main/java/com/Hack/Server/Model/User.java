@@ -1,6 +1,5 @@
 package com.Hack.Server.Model;
-
-
+import jakarta.validation.constraints.Pattern;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -18,6 +17,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int Id;
+    @Pattern(regexp = "^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9+_._]+[a-zA-Z]+$", message = "Ente valide email name!!")
     @Column(unique = true)
     private String email;
     private String password;
