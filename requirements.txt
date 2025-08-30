@@ -1,0 +1,8 @@
+fastapi
+uvicorn[standard]
+pydantic
+pyngrok
+opencv-python
+pillow
+numpy
+earthengine-api
