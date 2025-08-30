@@ -16,4 +16,8 @@ public interface UserServices {
 
     int DeleteUser(int uid);
 
+    User getUserByEmail(String email);
+
+    boolean authenticate(String email, String password);
+
 }

@@ -8,15 +8,29 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 
-    @Service
+@Service
     public class UserPrincipals implements UserServices {
 
         @Autowired
         private UserRepo userRepo;
 
 
+        public boolean authenticate(String email, String password) {
+            Optional<User> userOpt = userRepo.findByEmail(email);
+            if (userOpt.isPresent()) {
+                User user = userOpt.get();
+                // Plain text password check (for demo only)
+                return user.getPassword().equals(password);
+            }
+            return false;
+        }
+
+        public User getUserByEmail(String email) {
+            return userRepo.findByEmail(email).orElse(null);
+        }
 
         @Override
         public User findUserById(Integer id) {
