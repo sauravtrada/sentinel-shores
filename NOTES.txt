@@ -1,0 +1,36 @@
+Create a python code that is exposed via ngrok.now this nrrok url will be accseed
+vaia na post medthos via an app.the post method will contain image data as an base64 format and 
+a gps location and time and date and and the user credentil of the user calling the api enpoint of this code.
+now retrive the gps location sent  and using that location call  google earth engine api and retrive 5 previous images of that 
+location.after retrieving that image convert that image to gray sclae and do a check if there is any change in the images 
+then loctaion sent will be of mangrove forest and that previous 5 images will be used to check if there is any decrease in the area in which
+teh magroves were thaeere i.e if they are cut or not or there any deforedtation thus use the current date and time image thatis sent via the app
+as a standard and compare it with the previous 5 images and using ai detect if there is significant decrresase in magroves in that area
+and create a certain threshold limit that will deteremine if there is actual decrese in the number of trees or not and then sem the 
+percentage difference in that image and the previous images.
+
+points which are to be kept in mind.
+1] there should be detection of decrease in the area of mangroves i.e deforestation.
+2] if there is any mangrove poisoning in that area i.e detect it via the change in color of the tress in that area i.e if they are lush
+green the they are not poisoned and if they are turning pale that means there is poisoning in that mangrove area.
+use an appropriate image detection algo for the above criteria and keep in mind there are no errors in it.
+
+
+
+Create a python code that have api endpoints that will be called by an app. the app acll the endpoint and will haev some
+data attached to it which is 
+1] an image in the form of base64
+2] latitude
+3] longitude 
+4] date and time info
+now we have to fetch teh longitude and latitude from the call and use it to find the images of that location on the 
+Google earth engine. there should be 5 images that will be used taht are already present on GEE before the date and time
+that is sent in the api call.now use the previous 5 images of that location and the most recent image of that location for the 
+called date and time and check for 2things 
+1] is there any deforestation of mangroves after to the historiacl and cuurent images processing
+2] is there any poisoning in the region of the mangroves
+for the above detection you can use gray sacling and matrix cal for change in grayscale and paleness detection for poisoning 
+the api should return an analysis fi there is any deforestation or poisoning of the mangroves.
+the image data sent with the call willl be dealth with later development stage just implement thsi much now keep in mind
+taht thsi api willnbe called from an app thus this code should run not locally but publically so that it oculd be called 
+use mgrok for that 
