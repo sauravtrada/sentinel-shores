@@ -76,6 +76,7 @@ public class UserController {
         }
     }
 
+
     // New API: Get all users (Admin only)
     @GetMapping("/users")
     public ResponseEntity<?> getAllUsers(HttpServletRequest request) {
