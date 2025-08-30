@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_app/pages/login_page.dart';
+import 'package:flutter_app/pages/photo_home_page.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 void main() {
@@ -20,6 +21,8 @@ class MyApp extends StatelessWidget {
         return const PhotoHomePage(); // ✅ Go to photo page if token valid
       }
     }
+    return const PhotoHomePage(); // ✅ Go to photo page if token valid
+
     return const LoginPage(); // ❌ Otherwise login
   }
 
@@ -45,27 +48,6 @@ class MyApp extends StatelessWidget {
           }
           return snapshot.data ?? const LoginPage();
         },
-      ),
-    );
-  }
-}
-
-/// 📸 New page where user can take photos
-class PhotoHomePage extends StatelessWidget {
-  const PhotoHomePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text("Take a Photo")),
-      body: Center(
-        child: ElevatedButton.icon(
-          onPressed: () {
-            // TODO: Implement camera/photo picker
-          },
-          icon: const Icon(Icons.camera_alt),
-          label: const Text("Capture Photo"),
-        ),
       ),
     );
   }
