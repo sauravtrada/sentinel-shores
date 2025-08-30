@@ -74,6 +74,7 @@ class _PhotoHomePageState extends State<PhotoHomePage> {
       _currentFlashMode == FlashMode.off ? FlashMode.always : FlashMode.off;
     });
 
+
     await _cameraController!.setFlashMode(_currentFlashMode);
   }
 
