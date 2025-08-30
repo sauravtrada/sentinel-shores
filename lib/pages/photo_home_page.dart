@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class PhotoHomePage extends StatefulWidget {
   const PhotoHomePage({super.key});
@@ -50,6 +51,17 @@ class _PhotoHomePageState extends State<PhotoHomePage> {
       debugPrint("Error capturing photo: $e");
     }
   }
+
+  Future<void> _pickImageFromGallery() async {
+    final picker = ImagePicker();
+    final pickedImage = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedImage != null) {
+      setState(() {
+        _capturedImage = XFile(pickedImage.path);
+      });
+    }
+  }
+
   FlashMode _currentFlashMode = FlashMode.off;
   Future<void> _toggleFlash() async {
     if (_cameraController == null) return;
@@ -97,23 +109,50 @@ class _PhotoHomePageState extends State<PhotoHomePage> {
                 Align(
                   alignment: Alignment.bottomCenter,
                   child: Container(
-                    width: double.infinity,  // ✅ full width
+                    width: double.infinity,
                     color: Colors.black,
-                    padding: const EdgeInsets.symmetric(vertical: 20),
-                    child: GestureDetector(
-                      onTap: _capturePhoto,
-                      child: Container(
-                        width: 80,
-                        height: 80,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(color: Colors.white, width: 4),
-                          color: Colors.transparent,
+                    padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        // Camera capture button (center)
+                        GestureDetector(
+                          onTap: _capturePhoto,
+                          child: Container(
+                            width: 80,
+                            height: 80,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Colors.white, width: 4),
+                              color: Colors.transparent,
+                            ),
+                          ),
                         ),
-                      ),
+
+                        // Gallery button (bottom-left)
+                        Positioned(
+                          left: 0,
+                          child: GestureDetector(
+                            onTap: _pickImageFromGallery,
+                            child: Container(
+                              width: 60,
+                              height: 60,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Colors.white24,
+                              ),
+                              child: const Icon(
+                                Icons.photo_library,
+                                color: Colors.white,
+                                size: 30,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
-                ),
+                )
               ],
             );
           } else {
