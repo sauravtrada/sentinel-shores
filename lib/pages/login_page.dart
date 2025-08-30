@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 // import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config.dart';
@@ -23,28 +23,28 @@ class _LoginPageState extends State<LoginPage> {
     final url = Uri.parse(
         "${Config.apiBaseUrl}/auth/login?username=${usernameController.text}&password=${passwordController.text}");
 
-    // final response = await http.post(url);
-    //
-    // if (response.statusCode == 200) {
-    //   final data = jsonDecode(response.body);
-    //   final token = data["token"];
-    //   final expiresIn = data["expiresInSeconds"];
-    //   final expiryDate =
-    //   DateTime.now().add(Duration(seconds: expiresIn)).toIso8601String();
-    //
-    //   await storage.write(key: "token", value: token);
-    //   await storage.write(key: "expiresAt", value: expiryDate);
-    //
-    //   if (!mounted) return;
-    //   // Navigator.pushReplacement(
-    //   //   context,
-    //   //   MaterialPageRoute(
-    //   //       builder: (_) => const MyHomePage(title: "NavIC Tracker")),
-    //   // );
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //       const SnackBar(content: Text("❌ Login failed, try again")));
-    // }
+    final response = await http.post(url);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      final token = data["token"];
+      final expiresIn = data["expiresInSeconds"];
+      final expiryDate =
+      DateTime.now().add(Duration(seconds: expiresIn)).toIso8601String();
+
+      // await storage.write(key: "token", value: token);
+      // await storage.write(key: "expiresAt", value: expiryDate);
+
+      if (!mounted) return;
+      // Navigator.pushReplacement(
+      //   context,
+      //   MaterialPageRoute(
+      //       builder: (_) => const MyHomePage(title: "NavIC Tracker")),
+      // );
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("❌ Login failed, try again")));
+    }
     setState(() => isLoading = false);
   }
 

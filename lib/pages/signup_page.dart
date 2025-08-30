@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-// import 'package:http/http.dart' as http;
+import 'package:http/http.dart' as http;
 import '../config.dart';
 
 class SignupPage extends StatefulWidget {
@@ -20,18 +20,18 @@ class _SignupPageState extends State<SignupPage> {
     final url = Uri.parse(
         "${Config.apiBaseUrl}/auth/register?username=${usernameController.text}&password=${passwordController.text}");
 
-    // final response = await http.post(url);
-    //
-    // if (response.statusCode == 200) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text("✅ Signup successful! Please login.")),
-    //   );
-    //   Navigator.pop(context); // go back to login page
-    // } else {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //     const SnackBar(content: Text("❌ Signup failed, try again")),
-    //   );
-    // }
+    final response = await http.post(url);
+
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("✅ Signup successful! Please login.")),
+      );
+      Navigator.pop(context); // go back to login page
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("❌ Signup failed, try again")),
+      );
+    }
 
     setState(() => isLoading = false);
   }
