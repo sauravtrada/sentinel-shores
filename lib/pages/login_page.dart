@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-// import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../config.dart';
 import 'signup_page.dart';
 
@@ -15,7 +15,7 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final usernameController = TextEditingController();
   final passwordController = TextEditingController();
-  // final storage = const FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
   bool isLoading = false;
 
   Future<void> login() async {
@@ -32,8 +32,8 @@ class _LoginPageState extends State<LoginPage> {
       final expiryDate =
       DateTime.now().add(Duration(seconds: expiresIn)).toIso8601String();
 
-      // await storage.write(key: "token", value: token);
-      // await storage.write(key: "expiresAt", value: expiryDate);
+      await storage.write(key: "token", value: token);
+      await storage.write(key: "expiresAt", value: expiryDate);
 
       if (!mounted) return;
       // Navigator.pushReplacement(
