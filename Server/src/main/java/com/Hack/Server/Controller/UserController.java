@@ -44,6 +44,7 @@ public class UserController {
             response.put("userId", user.getId());
             response.put("email", user.getEmail());
             response.put("role", role);
+            response.put("expiration",jwtExpirationMs);
 
             return ResponseEntity.ok(response);
         } else {
