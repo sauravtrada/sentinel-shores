@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_app/pages/login_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -6,6 +7,24 @@ void main() {
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
+
+  Future<Widget> _checkToken() async {
+    // // final storage = const FlutterSecureStorage();
+    // final token = await storage.read(key: "token");
+    // final expires = await storage.read(key: "expiresAt");
+
+    final token = "";
+    final expires = "";
+
+
+    if (token != null && expires != null) {
+      final expiryDate = DateTime.tryParse(expires);
+      if (expiryDate != null && DateTime.now().isBefore(expiryDate)) {
+        // return const PhotoHomePage(); // ✅ token valid
+      }
+    }
+    return const LoginPage(); // ❌ token invalid or expired
+  }
 
   // This widget is the root of your application.
   @override
@@ -30,7 +49,18 @@ class MyApp extends StatelessWidget {
         // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: FutureBuilder<Widget>(
+        future: _checkToken(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+          if (snapshot.hasData) {
+            return snapshot.data!;
+          }
+          return const LoginPage();
+        },
+      ),
     );
   }
 }
