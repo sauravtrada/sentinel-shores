@@ -25,6 +25,8 @@ function App() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+const [userImages, setUserImages] = useState<string[]>([]);
+const [showImagesDropdown, setShowImagesDropdown] = useState(false);
 
   // Fetch users if token exists
   useEffect(() => {
@@ -37,6 +39,24 @@ function App() {
         .catch(err => setError('Failed to fetch users'))
     }
   }, [token])
+
+const handleViewUser = async (userId: number) => {
+  if (!token) return;
+
+  try {
+    const res = await axios.get(`http://localhost:8080/user/${userId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    });
+
+    // Assuming res.data is an array of image objects
+    const imagesBase64 = res.data.map((imgObj: any) => `data:image/png;base64,${imgObj.image}`);
+    setUserImages(imagesBase64);
+    setShowImagesDropdown(true);
+  } catch (err: any) {
+    console.error('Error fetching user:', err);
+    setError('Failed to fetch user images');
+  }
+}
 
   const handleLogin = async () => {
     if (!email || !password) {
@@ -790,12 +810,79 @@ function App() {
                           {getMeritLabel(user.marit)} ({user.marit})
                         </span>
                       </td>
+                      <td style={{ padding: '1rem 1.5rem', whiteSpace: 'nowrap' }}>
+                      <button
+                        onClick={() => handleViewUser(user.id)}
+                        style={{
+                          padding: '0.25rem 0.75rem',
+                          borderRadius: '0.5rem',
+                          background: 'linear-gradient(135deg, #4f46e5, #7c3aed)',
+                          color: 'white',
+                          border: 'none',
+                          cursor: 'pointer',
+                          fontSize: '0.75rem',
+                          fontWeight: '500',
+                          transition: 'all 0.2s'
+                        }}
+                        onMouseEnter={e => e.currentTarget.style.background = 'linear-gradient(135deg, #4338ca, #6d28d9)'}
+                        onMouseLeave={e => e.currentTarget.style.background = 'linear-gradient(135deg, #4f46e5, #7c3aed)'}
+                      >
+                        View
+                      </button>
+                    </td>
                     </tr>
                   );
                 })}
               </tbody>
             </table>
           </div>
+          {showImagesDropdown && userImages.length > 0 && (
+  <div style={{
+    marginTop: '1rem',
+    padding: '1rem',
+    background: 'rgba(255,255,255,0.9)',
+    backdropFilter: 'blur(8px)',
+    borderRadius: '1rem',
+    border: '1px solid rgba(0,0,0,0.1)',
+  }}>
+    <h3 style={{ marginBottom: '0.5rem' }}>User Images</h3>
+    <div style={{
+      display: 'flex',
+      overflowX: 'auto',
+      gap: '1rem',
+      paddingBottom: '0.5rem'
+    }}>
+      {userImages.map((src, idx) => (
+        <img 
+          key={idx}
+          src={src} 
+          alt={`user-${idx}`} 
+          style={{
+            height: '120px',
+            borderRadius: '0.5rem',
+            border: '1px solid #d1d5db'
+          }}
+        />
+      ))}
+    </div>
+    <button
+      onClick={() => setShowImagesDropdown(false)}
+      style={{
+        marginTop: '0.5rem',
+        padding: '0.25rem 0.75rem',
+        borderRadius: '0.5rem',
+        background: '#ef4444',
+        color: 'white',
+        border: 'none',
+        cursor: 'pointer',
+        fontSize: '0.75rem'
+      }}
+    >
+      Close
+    </button>
+  </div>
+)}
+
         </div>
 
         {/* Footer */}
