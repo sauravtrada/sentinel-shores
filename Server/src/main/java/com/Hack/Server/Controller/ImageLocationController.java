@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/image")
+@CrossOrigin("*")
 public class ImageLocationController {
 
     @Autowired

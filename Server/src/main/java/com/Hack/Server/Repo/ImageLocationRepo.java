@@ -8,4 +8,6 @@ import java.util.List;
 
 public interface ImageLocationRepo  extends JpaRepository<ImageLocation, Integer> {
     List<ImageLocation> findByUser(User user);
+
+    List<ImageLocation> findByUserId(int userId);
 }

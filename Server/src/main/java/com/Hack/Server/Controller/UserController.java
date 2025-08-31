@@ -1,7 +1,9 @@
 package com.Hack.Server.Controller;
 
+import com.Hack.Server.Model.ImageLocation;
 import com.Hack.Server.Model.User;
 import com.Hack.Server.Security.JwtUtil;
+import com.Hack.Server.Services.ImageLocationServices;
 import com.Hack.Server.Services.UserServices;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,10 +17,14 @@ import java.util.Map;
 
 @RestController
 @RequestMapping("/")
+@CrossOrigin("*")
 public class UserController {
 
     @Autowired
     private UserServices userService;
+
+    @Autowired
+    private ImageLocationServices imageLocationService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -109,4 +115,17 @@ public class UserController {
             return ResponseEntity.status(500).body("Error: " + e.getMessage());
         }
     }
+
+    //  Get all images by userId
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<List<ImageLocation>> getImagesByUserId(@PathVariable int userId) {
+        List<ImageLocation> images = imageLocationService.getImagesByUserId(userId);
+        if (images.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(images);
+    }
+
+
+
 }
