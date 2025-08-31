@@ -1,6 +1,6 @@
 # flutter_app
 
-A new Flutter project.
+Mobile application for user to upload images to server
 
 ## Getting Started
 
