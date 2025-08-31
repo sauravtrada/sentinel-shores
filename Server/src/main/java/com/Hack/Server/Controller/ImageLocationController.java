@@ -13,6 +13,7 @@ import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -31,7 +32,7 @@ public class ImageLocationController {
     @Autowired
     private ResultPrincipals resultService;
 
-    private static final String PYTHON_API_URL = "https://<your-ngrok-url>/analyze";
+    private static final String PYTHON_API_URL = "http://127.0.0.1:5000/get-mangrove-vegetation-analysis";
 
     @PostMapping("/save")
     public ResponseEntity<?> saveImageLocation(
@@ -64,14 +65,22 @@ public class ImageLocationController {
             imageLocation.setUser(user);
             ImageLocation savedLocation = imageLocationService.SaveImageLocation(imageLocation);
 
-            // Send request to Python API
-            RestTemplate restTemplate = new RestTemplate();
+            Map<String, Object> payload = new HashMap<>();
+            payload.put("latitude", savedLocation.getLatitude());
+            payload.put("longitude", savedLocation.getLongitude());
+            payload.put("date", "2023-08-01"); // or use a dynamic date if needed
+
+// Prepare headers
             HttpHeaders headers = new HttpHeaders();
             headers.setContentType(MediaType.APPLICATION_JSON);
 
-            HttpEntity<ImageLocation> requestEntity = new HttpEntity<>(savedLocation, headers);
-            ResponseEntity<Map> responseEntity =
-                    restTemplate.postForEntity(PYTHON_API_URL, requestEntity, Map.class);
+// Build request
+            HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(payload, headers);
+
+// Send POST request
+            RestTemplate restTemplate = new RestTemplate();
+            String pythonApiUrl = "http://127.0.0.1:5000/get-mangrove-vegetation-analysis";
+            ResponseEntity<Map> responseEntity = restTemplate.postForEntity(pythonApiUrl, requestEntity, Map.class);
 
             if (responseEntity.getStatusCode().is2xxSuccessful() && responseEntity.getBody() != null) {
                 Map<String, Object> response = responseEntity.getBody();
@@ -86,8 +95,9 @@ public class ImageLocationController {
 
                 resultService.SaveResult(result);
                 int FT=(int)result.getVegetation_loss_percent();
-                if(FT > 5) {
-                    user.setMarit(user.getMarit()+FT);
+                if(FT >= 3) {
+                    int merit = user.getMarit()+FT;
+                    user.setMarit(merit);
                     userService.UpdateUser(user.getId(), user);
                 }
                 else{
