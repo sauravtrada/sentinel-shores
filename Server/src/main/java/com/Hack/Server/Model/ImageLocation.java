@@ -29,13 +29,5 @@ public class ImageLocation {
     @Column(name = "image", columnDefinition = "LONGBLOB")
     private byte[] image; // Store base64 or convert to byte[] if needed
 
-    // Getters and Setters
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
 
 }

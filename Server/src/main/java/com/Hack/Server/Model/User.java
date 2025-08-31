@@ -24,6 +24,12 @@ public class User {
     private int Marit;
     private int FoulConunt;
     private String Role;
+    // Foreign key to ImageLocation (unique, nullable)
+    @OneToOne
+    @JoinColumn(name = "image_id", unique = true, nullable = true)
+    private ImageLocation imageLocation;
+
+
 
 
 
